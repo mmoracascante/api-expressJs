@@ -1,0 +1,45 @@
+¿Qué es ExpressJs?
+Es un mini framework que corre con NodeJs
+
+API Restfull: servicios webs que se comunican con el protocolo http
+Rest: representational state transfer // servicios web
+
+
+** Los endpoints de forma especifica deben ir antes de los endpoints dinamicos, entonces con esto no chocan las rutas
+  - '/products/filter' y luedo '/products/:id'
+
+Single responsibility principle: cada pieza debería tener una sola responsibilidad
+
+Status code:
+  404 not found
+  500 el servidor se rompio
+
+Middlewares: estan en medio del request y el response.
+  * Funcionar como pipes
+  * Validar datos
+  *Capturar errores
+  * Validar permisos
+  * Controlar accesos
+
+Middleware de error:
+
+ function (err, req, res, next) {
+   if(error) {
+     res.status(500).json({err})
+   } else {
+     next()
+   }
+ }
+
+*** Middlewares populares de ExpressJs ***
+
+CORS: Middleware para habilitar CORS (Cross-origin resource sharing) en nuestras rutas o aplicación.
+Morgan: Un logger de solicitudes HTTP para Node.js.
+Helmet: Helmet nos ayuda a proteger nuestras aplicaciones Express configurando varios encabezados HTTP.
+Express Slash: Este middleware nos permite evitar preocuparnos por escribir las rutas con o sin slash al final de ellas.
+Passport: Passport es un middleware que nos permite establecer diferentes estrategias de autenticación a nuestras aplicaciones
+
+
+
+ https://git.heroku.com/cryptic-shore-79304.git
+ https://cryptic-shore-79304.herokuapp.com/
