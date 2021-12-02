@@ -1,4 +1,4 @@
-const { fake } = require('faker')
+const boom = require('@hapi/boom')
 const faker = require('faker')
 
 
@@ -8,7 +8,7 @@ class ProductsService {
     this.generate()
   }
 
-  generate() {
+  async generate() {
   const limit = 100
 
   for (let index = 0; index < limit; index++) {
@@ -17,11 +17,12 @@ class ProductsService {
           name: faker.commerce.productName(),
           price: parseInt(faker.commerce.price(), 10),
           image: faker.image.imageUrl(),
+          isBlock: faker.datatype.boolean(),
       })
     }
   }
 
-  create(body) {
+  async create(body) {
     const createProduct = {
       id: faker.datatype.uuid(),
       ...body
@@ -30,19 +31,30 @@ class ProductsService {
     return createProduct
   }
 
-  find() {
-    return this.products
+  async find() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.products)
+      }, 500)
+    })
+
   }
 
-  findOne(id) {
+  async findOne(id) {
     const findProductId = this.products.find(product => product.id === id)
+    if (!findProductId) {
+      throw boom.notFound('Product not found')
+    }
+    if (findProductId.isBlock) {
+      throw boom.conflict('Product is blocked')
+    }
     return findProductId
   }
 
-  update(id, body) {
+  async update(id, body) {
     const index = this.products.findIndex(product => product.id === id)
     if (index === -1) {
-      throw new Error('Not found')
+      throw boom.notFound('Product not found')
     } else {
       const product = this.products[index]
       this.products[index] = {
@@ -54,10 +66,10 @@ class ProductsService {
 
   }
 
-  delete(id) {
+  async delete(id) {
     const findProductId = this.products.findIndex(product => product.id === id)
     if(findProductId === -1) {
-      throw new Error('Product not found')
+      throw boom.notFound('Product not found')
     } else {
       // metodo splice le enviamos la posicion dentro del array
       // y el numero de elementos que queremos eliminar
